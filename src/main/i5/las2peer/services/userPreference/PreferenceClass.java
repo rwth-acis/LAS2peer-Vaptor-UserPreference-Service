@@ -19,6 +19,7 @@ import i5.las2peer.restMapper.annotations.swagger.Summary;
 import i5.las2peer.restMapper.tools.ValidationResult;
 import i5.las2peer.restMapper.tools.XMLCheck;
 import i5.las2peer.services.userPreference.database.DatabaseManager;
+import i5.las2peer.services.userPreference.util.OIDC;
 
 import java.io.IOException;
 import java.net.URI;
@@ -64,9 +65,11 @@ public class PreferenceClass extends Service {
 	private String charEncoding;
 	private String charSet;
 	private String collation;
+	
 
 	private DatabaseManager dbm;
 	private String epUrl;
+	private String userinfo;
 	
 	GraphEntity graphNew;
 	
@@ -91,19 +94,40 @@ public class PreferenceClass extends Service {
 	//public String postUserProfile(@HeaderParam(name="username" , defaultValue = "*") String username, @HeaderParam(name = "location", defaultValue = "*" ) String location, 
 			//@HeaderParam(name = "language", defaultValue = "*" ) String language, @HeaderParam(name = "duration", defaultValue = "*" ) String duration){
 
-	public String postPreferences(@ContentParam String jsonPreferences){
+	public HttpResponse postPreferences(@ContentParam String jsonPreferences){
 	
 		JSONObject preferenceObject = new JSONObject(jsonPreferences.toString());
 		
 		System.out.println("LOCATION: "+preferenceObject.getString("location"));
 		System.out.println("language: "+preferenceObject.getString("language"));
-		System.out.println("username: "+preferenceObject.getString("username"));
+		//System.out.println("username: "+preferenceObject.getString("username"));
+		
+		String token = preferenceObject.getString("Authorization");
+		System.out.println("TOKEN: "+token);
+		String username = null;
+		if(token!=null){
+			   token = token.replace("Bearer ","");
+			   username = OIDC.verifyAccessToken(token, userinfo);
+			   
+			   if(username.isEmpty() || username.equals("undefined") || 
+						username.equals("error")){
+					HttpResponse r = new HttpResponse("User is not signed in!");
+					r.setStatus(401);
+					return r;
+				}
+			   
+		}
+		else{
+			HttpResponse r = new HttpResponse("User is not signed in!");
+			r.setStatus(401);
+			return r;
+		}
 		
 		dbm = new DatabaseManager();
 		dbm.init(driverName, databaseServer, port, database, this.username, password, hostName);
 		
 		String [] preferences = {
-				preferenceObject.getString("username"),
+				username,
 				preferenceObject.getString("location"),
 				preferenceObject.getString("language"),
 				preferenceObject.getString("duration"),
@@ -134,16 +158,41 @@ public class PreferenceClass extends Service {
 		dbm.userExists(preferences[0]);
 		
 		dbm.update(preferences);
-		dbm.updateExpertise(preferenceObject.getString("username"), domain, level);
+		dbm.updateExpertise(username, domain, level);
 
-		return preferenceObject.getString("language");
+		HttpResponse r = new HttpResponse("Preferences successfully saved!");
+		r.setStatus(200);
+		return r;
 	}
 	
 		
 	@GET
 	@Path("")
-	public String getPreferences(@QueryParam(name="username" , defaultValue = "*") String username){
+	public HttpResponse getPreferences(@QueryParam(name = "Authorization", defaultValue = "") String token
+			//@QueryParam(name="username" , defaultValue = "*") String username
+			){
 
+		String username = null;
+		
+		System.out.println("TOKEN: "+token);
+		
+		if(token!=null){
+			   token = token.replace("Bearer ","");
+			   username = OIDC.verifyAccessToken(token, userinfo);
+			   
+			   if(username.isEmpty() || username.equals("undefined") || 
+						username.equals("error")){
+					HttpResponse r = new HttpResponse("User is not signed in!");
+					r.setStatus(401);
+					return r;
+				}
+		}
+		else{
+			HttpResponse r = new HttpResponse("User is not signed in!");
+			r.setStatus(401);
+			return r;
+		}
+		
 		System.out.println("USER: "+username);
 		dbm = new DatabaseManager();
 		dbm.init(driverName, databaseServer, port, database, this.username, password, hostName);
@@ -160,15 +209,38 @@ public class PreferenceClass extends Service {
 		preferencesJSON.put("location", preferences[4]);
 		
 		
-		
-		return preferencesJSON.toString();
+		HttpResponse r = new HttpResponse(preferencesJSON.toString());
+		r.setStatus(200);
+		return r;
 	}
 	
 	@GET
 	@Path("expertise")
-	public int getExpertise(@QueryParam(name="username" , defaultValue = "*") String username,
+	public HttpResponse getExpertise(@QueryParam(name = "Authorization", defaultValue = "") String token,
+			//@QueryParam(name="username" , defaultValue = "*") String username,
 			@QueryParam(name="domain" , defaultValue = "*") String videoDomain){
 
+		String username = null;
+		
+		System.out.println("TOKEN: "+token);
+		
+		if(token!=null){
+			   token = token.replace("Bearer ","");
+			   username = OIDC.verifyAccessToken(token, userinfo);
+			   
+			   if(username.isEmpty() || username.equals("undefined") || 
+						username.equals("error")){
+					HttpResponse r = new HttpResponse("User is not signed in!");
+					r.setStatus(401);
+					return r;
+				}
+		}
+		else{
+			HttpResponse r = new HttpResponse("User is not signed in!");
+			r.setStatus(401);
+			return r;
+		}
+		
 		//System.out.println("USER: "+username);
 		dbm = new DatabaseManager();
 		dbm.init(driverName, databaseServer, port, database, this.username, password, hostName);
@@ -176,40 +248,12 @@ public class PreferenceClass extends Service {
 		int expertise = dbm.getExpertise(videoDomain, username);
 		//String[] preferences = dbm.getPreferences(username);
 		
-		return expertise;
+		HttpResponse r = new HttpResponse(String.valueOf(expertise));
+		r.setStatus(200);
+		return r;
+		
 	}
 	
-	
-	/*
-	@POST
-	@Path("")
-	public String postRecommendation(@QueryParam(defaultValue = "", name = "annotationId") String annotationId,
-			@QueryParam(defaultValue = "", name = "recommendation") boolean recommendation,
-			@QueryParam(defaultValue = "", name = "username") String username){
-		
-		dbm = new DatabaseManager();
-		dbm.init(driverName, databaseServer, port, database, this.username, password, hostName);
-		
-		String[] weightAndDomain = getWeightAndDomain();
-		String level = dbm.getExpertise(weightAndDomain[0], username);
-		*/
-		/*CloseableHttpResponse response = null;
-		URI request = null;
-		JSONArray jsonResponse = null;
-		
-		request = new URI("http://eiche:7073/annotations/annotations?q="+searchString.replaceAll(" ", ",")+"&part=duration,weight,id,objectCollection,location,objectId,text,time,title,keywords&collection=TextTypeAnnotation");
-		CloseableHttpClient httpClient = HttpClients.createDefault();
-		HttpGet get = new HttpGet(request);
-		response = httpClient.execute(get);
-		*/
-		/*
-		return "";
-	}
-	
-	private String[] getWeightAndDomain() {
-		// get weight and domain from the annotation service
-		return null;
-	}*/
 	
 	
 	// ================= Swagger Resource Listing & API Declarations

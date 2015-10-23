@@ -299,6 +299,10 @@ public class DatabaseManager
 			pstmt.setString(1, username);
 			pstmt.setString(2, domain);
 			res = pstmt.executeQuery();
+			
+			System.out.println("username: "+username);
+			System.out.println("domain: "+domain);
+			
 
 			if(res.next()){
 				
