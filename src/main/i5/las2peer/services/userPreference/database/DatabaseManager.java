@@ -141,7 +141,7 @@ public class DatabaseManager
 
 			if(!res.next()){
 				
-				String[] preferences = {username,"aachen","english","5"};
+				String[] preferences = {username,"aachen","en","5"};
 				setPreferences(preferences);
 				
 			}
@@ -276,10 +276,10 @@ public class DatabaseManager
 		}
 	}
 	
-	public int getExpertise(String domain, String username){
+	public float getExpertise(String domain, String username){
 
 		ResultSet res = null;
-		int level = 0;
+		float level = 0;
 		try {
 			Class.forName(driver).newInstance();
 			Connection conn = DriverManager.getConnection(url+dbName,userName,password);
@@ -298,7 +298,7 @@ public class DatabaseManager
 
 			if(res.next()){
 				
-				level = res.getInt("expertise_level");
+				level = res.getFloat("expertise_level");
 				
 			}
 			

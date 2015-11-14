@@ -245,7 +245,7 @@ public class PreferenceClass extends Service {
 		dbm = new DatabaseManager();
 		dbm.init(driverName, databaseServer, port, database, this.username, password, hostName);
 		
-		int expertise = dbm.getExpertise(videoDomain, username);
+		float expertise = dbm.getExpertise(videoDomain, username);
 		//String[] preferences = dbm.getPreferences(username);
 		
 		HttpResponse r = new HttpResponse(String.valueOf(expertise));
