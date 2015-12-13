@@ -142,7 +142,7 @@ public class ServiceTest {
 	 * Tests the User Preference Service for getting the preferences for a user
 	 */
 	//@Ignore("Used only for performance tests")
-	@Test
+	//@Test
 	public void testGetUserPreference()
 	{
 		MiniClient c = new MiniClient();
@@ -182,7 +182,7 @@ public class ServiceTest {
 	 * Tests the User Preference Service for posting the preferences for a user
 	 */
 	//@Ignore("Used only for performance tests")
-	@Test
+	//@Test
 	public void testPostUserPreference()
 	{
 		MiniClient c = new MiniClient();

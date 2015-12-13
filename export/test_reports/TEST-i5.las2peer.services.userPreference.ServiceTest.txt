@@ -1,0 +1,92 @@
+Testsuite: i5.las2peer.services.userPreference.ServiceTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 15.996 sec
+------------- Standard Output ---------------
+Class: PreferenceClass using: hostName -> eiche
+Class: PreferenceClass using: epUrl -> http://localhost:7074/preference/
+Class: PreferenceClass using: driverName -> com.mysql.jdbc.Driver
+Class: PreferenceClass using: databaseServer -> mysql
+Class: PreferenceClass using: port -> 3306
+Class: PreferenceClass using: collation -> utf8_unicode_ci
+Class: PreferenceClass using: charSet -> utf8
+Class: PreferenceClass using: username -> annot
+Class: PreferenceClass using: charEncoding -> utf-8
+Class: PreferenceClass using: userinfo -> https://api.learning-layers.eu/o/oauth2/userinfo
+Class: PreferenceClass using: database -> userprofile
+Class: PreferenceClass using: password -> 23pnote477
+Class: PreferenceClass using: useUniCode -> true
+Service i5.las2peer.services.userPreference.PreferenceClass has been started!
+Class: WebConnector using: enableCrossOriginResourceSharing -> TRUE
+Class: WebConnector using: sslKeystore -> etc/example.jks
+Class: WebConnector using: httpsPort -> 8090
+Class: WebConnector using: startHttps -> FALSE
+Class: WebConnector using: sslKeyPassword -> secretpassword
+Class: WebConnector using: preferLocalServices -> TRUE
+Class: WebConnector using: defaultLoginPassword -> pwalice
+Class: WebConnector using: httpPort -> 7077
+Class: WebConnector using: xmlPath -> 
+Class: WebConnector using: crossOriginResourceDomain -> *
+Class: WebConnector using: defaultLoginUser -> alice
+Class: WebConnector using: startHttp -> TRUE
+Class: WebConnector using: crossOriginResourceMaxAge -> 60
+waiting..
+i5.las2peer.services.userPreference.PreferenceClass => <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<service consumes="*" name="i5.las2peer.services.userPreference.PreferenceClass" path="preference" produces="text/plain" version="0.1">
+  <methods>
+    <method httpMethod="post" name="postPreferences" type="i5.las2peer.restMapper.HttpResponse">
+      <parameters>
+        <parameter annotation="content" index="0" name="" type="java.lang.String"/>
+      </parameters>
+    </method>
+    <method httpMethod="get" name="getExpertise" path="expertise" type="i5.las2peer.restMapper.HttpResponse">
+      <parameters>
+        <parameter annotation="query" default="" index="0" name="Authorization" type="java.lang.String"/>
+        <parameter annotation="query" default="*" index="1" name="domain" type="java.lang.String"/>
+      </parameters>
+    </method>
+    <method httpMethod="get" name="getPreferences" type="i5.las2peer.restMapper.HttpResponse">
+      <parameters>
+        <parameter annotation="query" default="" index="0" name="Authorization" type="java.lang.String"/>
+      </parameters>
+    </method>
+    <method httpMethod="get" name="getSwaggerResourceListing" path="api-docs" produces="application/json" type="i5.las2peer.restMapper.HttpResponse">
+      <parameters/>
+    </method>
+    <method httpMethod="get" name="getSwaggerApiDeclaration" path="api-docs/{tlr}" produces="application/json" type="i5.las2peer.restMapper.HttpResponse">
+      <parameters>
+        <parameter annotation="path" index="0" name="tlr" type="java.lang.String"/>
+      </parameters>
+    </method>
+  </methods>
+</service>
+
+Class: PreferenceClass using: hostName -> eiche
+Class: PreferenceClass using: epUrl -> http://localhost:7074/preference/
+Class: PreferenceClass using: driverName -> com.mysql.jdbc.Driver
+Class: PreferenceClass using: databaseServer -> mysql
+Class: PreferenceClass using: port -> 3306
+Class: PreferenceClass using: collation -> utf8_unicode_ci
+Class: PreferenceClass using: charSet -> utf8
+Class: PreferenceClass using: username -> annot
+Class: PreferenceClass using: charEncoding -> utf-8
+Class: PreferenceClass using: userinfo -> https://api.learning-layers.eu/o/oauth2/userinfo
+Class: PreferenceClass using: database -> userprofile
+Class: PreferenceClass using: password -> 23pnote477
+Class: PreferenceClass using: useUniCode -> true
+Service i5.las2peer.services.userPreference.PreferenceClass has been stopped!
+checking for expired messages
+waiting for 0 agents 
+Connector-Log:
+--------------
+Dec 13, 2015 2:11:33 PM	Web-Connector in HTTP mode running on port 8080
+Dec 13, 2015 2:11:44 PM	Web-Connector has been stopped
+
+------------- ---------------- ---------------
+------------- Standard Error -----------------
+field not found: idGeneratingService
+field not found: enableCURLLogger
+field not found: socketTimeout
+field not found: idGeneratingService
+field not found: enableCURLLogger
+------------- ---------------- ---------------
+
+Testcase: testDebugMapping took 0.131 sec
